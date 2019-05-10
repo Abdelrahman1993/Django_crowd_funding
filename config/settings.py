@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'accounts',
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -132,3 +132,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 SITE_ID = 1
 
+AUTH_USER_MODEL = 'accounts.User'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'a.abdelfatah.100@gmail.com'
+EMAIL_HOST_PASSWORD = 'bxxpyhkudxpsxllt'

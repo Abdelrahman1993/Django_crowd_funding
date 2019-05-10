@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>login AskFm Website</title>
+  <!-- font awsome -->
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'
+        integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU'
+        crossorigin='anonymous'>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style_accounts.css' %}">
+</head>
+<body style="background-color: #2F353A">
+  <div class="container">
+    <div class="row login-head">
+      <div class="col-md-8" style="margin: auto">
+        <div class="row">
+          <div class="col-md-3">
+            <h1><a href="{% url 'root' %}">
+                <strong style="font-size: 40px;color: #FF643C;">ask</strong>fm
+            </a></h1>
+          </div>
+          <div class="col-md-6" style="display: inline-block">
+            <p>Log in</p>
+          </div>
+          <div class="col-md-3">
+             <a href="{% url 'accounts:signup' %}" class="sig">Sign up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr style="border: .2px solid #000000; margin: 10px 0">
+  <br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 login-form">
+      {% if form.errors %}
+        <p style="color: red;">Your username and password didn`t match</p>
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden", name="next" value="{{ next }}"/>
+        {% for field in form %}
+          <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% for error in field.errors %}
+              <p style="color: red;">{{ error }}</p>
+            {% endfor %}
+            {% if field.help_text %}
+              <p><small style="color: gray;">{{ field.help_text }}</small></p>
+            {% endif %}
+          </p>
+        {% endfor %}
+        <button type="submit">Login</button>
+      </form>
+      <br><br>
+      <span style="margin-left: 85px">______________________</span>
+      <span>Login With</span>
+      <span>______________________________</span><br>
+      <div>
+        <ul style="list-style-type: none; margin-top: 20px; height: 120px;">
+          <li style="float: left; margin-right: 10px;">
+            <a class="btn btn-outline-dark" href="{% url 'social:begin' 'github' %}">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+          <li style="float: left; margin-right: 10px;">
+            <a class="btn btn-outline-primary" href="{% url 'social:begin' 'facebook' %}">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+          <li style="float: left; margin-right: 10px;">
+            <a class="btn btn-outline-secondary" href="{% url 'social:begin' 'google-oauth2' %}">
+              <i class="fab fa-google"></i>
+            </a>
+          </li>
+          <li style="float: left; margin-right: 10px;">
+            <a class="btn btn-outline-danger" href="{% url 'social:begin' 'instagram' %}">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </li>
+          <li style="float: left;">
+            <a class="btn btn-outline-info" href="{% url 'social:begin' 'twitter' %}">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
