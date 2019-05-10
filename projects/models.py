@@ -1,6 +1,7 @@
 from django.db import models
-from datatime import datetime
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator 
+from accounts.models import User
 
 
 # Create your models here.
@@ -18,8 +19,8 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     details = models.TextField(blank=True)
     target = models.IntegerField()
-    start_time = models.DateTimeField(default = datetime.now, blank=True)
-    end_time = models.DateTimeField(default = datetime.now)
+    start_time = models.DateTimeField(auto_now_add = True, blank=True)
+    end_time = models.DateTimeField()
     featured = models.BooleanField(default = False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
