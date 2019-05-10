@@ -31,6 +31,7 @@ class Project(models.Model):
 class Picture(models.Model):
     image = models.ImageField(upload_to = 'photos/')
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
+  
 
 class Comment(models.Model):
     body = models.TextField()
