@@ -1,6 +1,6 @@
 from django.views import View
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import SignupForm
 from django.contrib.sites.shortcuts import get_current_site
 from .models import User
@@ -54,10 +54,7 @@ class Activate(View):
             # activate user and login:
             user.is_active = True
             user.save()
-            login(request, user)
-
-            form = PasswordChangeForm(request.user)
-            return render(request, 'activation.html', {'form': form})
+            return redirect('accounts:login')
 
         else:
             return HttpResponse('Activation link is invalid!')
