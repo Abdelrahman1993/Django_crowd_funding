@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('projects/', include('projects.urls')),
     path('', root),
-    path('favicon.ico', RedirectView.as_view(url='/favicon.ico')),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
     path('home/', root),
     path('accounts/', include('accounts.urls', namespace='accounts')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + staticfiles_urlpatterns()
