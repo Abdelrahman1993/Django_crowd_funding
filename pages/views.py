@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from projects.models import Project
 # Create your views here.
 def index(request):
+    #print(request.user)
     projects = Project.objects.all()[:5]
     highest_five_rated = Project.objects.all()[:5]
     latest_five = Project.objects.all()[:5]
