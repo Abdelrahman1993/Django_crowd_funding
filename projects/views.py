@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .formCreat import CreateProject
 from django.http import HttpResponse
+from .models import Project, Category
 
 
 # Create your views here.
@@ -15,8 +16,31 @@ def project_details(request, _id):
 def create(request):
     if request.method == 'POST':
         form = CreateProject(request.POST)
-        if form.is_valid():
-            return HttpResponse("Mission Complete")
+        if form:
+            project = Project()
+            project.title = form['title'].value()
+            project.target = int(form['target'].value())
+            project.details = form['details'].value()
+            project.end_time = form['endTiem'].value()
+            project.category_id = int(request.POST['category'])
+            project.tages = form['tages'].value()
+            project.save()
+            if project.id:
+                form = CreateProject()
+                category = Category.objects.all()
+                context = {
+                    'form': form,
+                    'category': category,
+                    'done': "broject has been created"
+                }
+                return render(request, 'projects/create.html', context)
+            return HttpResponse('nooooooooooooooooo')
+        return HttpResponse(form.fields)
     else:
         form = CreateProject()
-        return render(request, 'projects/create.html', {'form': form})
+        category = Category.objects.all()
+        context = {
+            'form': form,
+            'category': category
+        }
+        return render(request, 'projects/create.html', context)
