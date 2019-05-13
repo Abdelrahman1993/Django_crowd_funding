@@ -1,15 +1,17 @@
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .models import Comment, Project, Reply, Picture
+from .formCreat import CreateProject
+from .models import Comment, Project, Reply, Picture, Category
+
 
 # Create your views here.
 
 
 def index(request):
     return render(request, 'projects/index.html')
-
 
 def project_details(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
@@ -81,3 +83,35 @@ def update_reply(request, comment_id, project_id, reply_id):
     Reply.objects.filter(pk=reply_id).update(body=body)
     project = get_object_or_404(Project, pk=project_id)
     return redirect('projects:project_details', project_id=project_id)
+
+
+def create(request):
+    category = Category.objects.all()
+    if request.method == 'POST':
+        form = CreateProject(request.POST)
+        if form:
+            project = Project()
+            project.title = form['title'].value()
+            project.target = int(form['target'].value())
+            project.details = form['details'].value()
+            project.end_time = form['endTiem'].value()
+            project.category_id = int(request.POST['category'])
+            project.tages = form['tages'].value()
+            project.save()
+            if project.id:
+                form = CreateProject()
+                contextPost = {
+                    'form': form,
+                    'category': category,
+                    'done': "broject has been created"
+                }
+                return render(request, 'projects/create.html', contextPost)
+            return HttpResponse('nooooooooooooooooo')
+        return HttpResponse(form.fields)
+    else:
+        form = CreateProject()
+        contextGet = {
+            'form': form,
+            'category': category,
+        }
+        return render(request, 'projects/create.html', contextGet)

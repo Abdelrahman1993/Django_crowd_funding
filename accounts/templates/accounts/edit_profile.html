@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+{% load static %}
+<style>
+  input[name='email']{
+    border: none;
+    outline: none;
+    font-size: 25px;
+    text-align: center;
+    color: #FF643C;
+  }
+</style>
+{% block content %}
+  <div style="background-color: white; text-align: center">
+    <h2 style="padding-top: 20px; color: #FF643C">Edit your profile</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+        <p>
+          <h5 style="margin: 0; padding: 0;">{{ field.label_tag }}</h5>
+          {{ field}}
+          {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </p>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    <br>
+  </div>
+{% endblock %}
+
+

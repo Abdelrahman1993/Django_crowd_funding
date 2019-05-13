@@ -4,6 +4,7 @@ from projects.models import Project
 from django.db.models import Q
 # Create your views here.
 def index(request):
+    #print(request.user)
     projects = Project.objects.all()[:5]
     highest_five_rated = Project.objects.all()[:5]
     latest_five = Project.objects.order_by('-start_time')[:5]
