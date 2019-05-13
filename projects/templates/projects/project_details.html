@@ -3,6 +3,20 @@
 {% block content %}
     <div class="container">
         <h1>single project page</h1>
-        <p>info aboue project</p>
+        <p>info about project  id = {{ project.id }}</p>
+        <p> title = {{ project.title }}</p>
+        <p> details = {{ project.details }}</p>
+
+        <span>comments : </span></br>
+        {% for comment in project.comment_set.all %}
+        {{ comment.user.first_name }} {{ comment.user.last_name }} : <strong>{{ comment.body }}</strong></br>
+        {% endfor %}
+
+        <form action="{% url 'projects:addComment' project.id %}" method="post">
+            {% csrf_token %}
+            body : <input  type="text" name="body" />
+            user : <input  type="text" name="user_id" />
+            <input type="submit" value="Add" name="submit" />
+        </form>
     </div>
 {% endblock content %}
