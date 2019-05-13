@@ -22,13 +22,13 @@ def new_comment(request, project_id):
         user_id=request.POST['user_id'], body=request.POST['body'],
         project_id=project_id)
     comment.save()
-    return render(request, 'projects/project_details.html', {'project': project})
+    return redirect('projects:project_details', project_id=project_id)
 
 
 def delete_comment(request, comment_id, project_id):
     Comment.objects.filter(pk=comment_id).delete()
     project = get_object_or_404(Project, pk=project_id)
-    return render(request, 'projects/project_details.html', {'project': project})
+    return redirect('projects:project_details', project_id=project_id)
 
 
 def edit_comment(request, comment_id, project_id):
@@ -41,4 +41,4 @@ def update_comment(request, comment_id, project_id):
     body = request.POST['body']
     Comment.objects.filter(pk=comment_id).update(body=body)
     project = get_object_or_404(Project, pk=project_id)
-    return render(request, 'projects/project_details.html', {'project': project})
+    return redirect('projects:project_details', project_id=project_id)

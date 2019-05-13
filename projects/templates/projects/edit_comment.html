@@ -18,9 +18,10 @@
         </form>
         {% else %}   
            <strong>{{ comment.body }}</strong>
+           <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
+           <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>
         {% endif %}   
-         <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
-        <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>
+
         {% endfor %}
     </div>
 {% endblock content %}
