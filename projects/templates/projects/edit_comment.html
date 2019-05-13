@@ -7,28 +7,25 @@
             <p class="font-weight-bold text-dark" > {{ project.details }}</p>
             
             <h5 class="font-weight-bold text-dark" > comments : </h5></br>
+    <div class="jumbotron rounded bg-light">
+            {% for comment in project.comment_set.all %}
+           
+            {% if comment_id == comment.id %}
+            
+               <form action="{% url 'projects:updateComment' comment.project.id comment.id %}" method="post">
+                    {% csrf_token %}
+                    <span class="font-weight-bold text-primary" > 
+                            {{ comment.user.first_name }} {{ comment.user.last_name }} :
+                           </span>
+                <input type="text" class="form-control input-lg" value="{{ comment.body }}" name="body" />
+                <input type="submit" class="btn btn-primary" value="Edit" name="submit" />
+            </form>
+           
+            {% endif %}   
+    
+            {% endfor %}
 
-        {% for comment in project.comment_set.all %}
-        <span class="font-weight-bold text-primary" >  {{ comment.user.first_name }} {{ comment.user.last_name }} :</span> 
+    </div>
        
-        {% if comment_id == comment.id %}
-           <form action="{% url 'projects:updateComment' comment.project.id comment.id %}" method="post">
-                {% csrf_token %}
-            <input type="text" class="form-control input-lg" value="{{ comment.body }}" name="body" />
-            <input type="submit" class="btn btn-success" value="Edit" name="submit" />
-        </form>
-        {% else %}   
-           <strong>{{ comment.body }}</strong>
-           <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </a>
-            <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-            </a><br/>
-           <!-- <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
-           <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br> -->
-        {% endif %}   
-
-        {% endfor %}
     </div>
 {% endblock content %}

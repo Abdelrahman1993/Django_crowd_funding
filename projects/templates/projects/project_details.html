@@ -7,33 +7,53 @@
         <p class="font-weight-bold text-dark" > {{ project.details }}</p>
         
         <h5 class="font-weight-bold text-dark" > comments : </h5></br>
-        {% for comment in project.comment_set.all %}
-        <span class="font-weight-bold text-primary" >  {{ comment.user.first_name }} {{ comment.user.last_name }} :</span> 
-        <span>{{ comment.body }}</span>
-        <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-        </a>
-        <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
-                <i class="fa fa-edit" aria-hidden="true"></i>
-        </a><br/>
-        <!-- <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a> -->
-        <!-- <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>    -->
-            {% for reply in comment.reply_set.all%}
-                <p style="margin-left:5%">
-                    <span class="font-weight-bold text-primary" > 
-                        {{ reply.user.first_name }} {{ reply.user.last_name }} :
-                    </span>
-                    <span>{{ reply.body }}</span>
-                </p>
-                {% endfor%}
-            <a style="margin-left:5%" class="btn btn-primary" role="button" href="{% url 'projects:newReply' comment.project.id comment.id %}" >Add Reply</a><br />
-        {% endfor %}
+        <div class="jumbotron rounded bg-light">
+                {% for comment in project.comment_set.all %}
+                <span class="font-weight-bold text-primary" >  {{ comment.user.first_name }} {{ comment.user.last_name }} :</span> 
+                <span>{{ comment.body }}</span>
+        
+                {% if comment.user.id == request.user.id %}
+                <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+                <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
+                        <i class="fa fa-edit" aria-hidden="true"></i>
+                </a>
+                {% endif %}
+                <br/>
+                <!-- <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a> -->
+                <!-- <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>    -->
+                    {% for reply in comment.reply_set.all%}
+                        <p style="margin-left:5%">
+                            <span class="font-weight-bold text-primary" > 
+                                {{ reply.user.first_name }} {{ reply.user.last_name }} :
+                            </span>
+                            <span>{{ reply.body }}</span>
+                            {% if reply.user.id == request.user.id %}
+                                <a href="{% url 'projects:deleteReply'  reply.comment.project.id reply.comment.id reply.id %}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                                <a href="{% url 'projects:editReply'  reply.comment.project.id reply.comment.id reply.id %}">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                               
+                            {% endif %}
 
-        <form class="form-group" action="{% url 'projects:addComment' project.id %}" method="post">
-            {% csrf_token %} 
-            <input class="form-control input-lg" placeholder="Add Comment ..." type="text" name="body" />
-            <input  type="text" name="user_id" />
-            <input class="btn btn-primary" type="submit" value="Add" name="submit" />
-        </form>
+                        </p>
+                        {% endfor%}
+                    <a style="margin-left:5%;margin-bottom:2% " class="btn btn-primary" role="button" href="{% url 'projects:newReply' comment.project.id comment.id %}" >Add Reply</a><br />
+                {% endfor %}
+           
+                 <div class="form-group col-xs-6">
+                <form class="form-group" action="{% url 'projects:addComment' project.id %}" method="post">
+                    {% csrf_token %} 
+                    
+                    <input class="form-control input-md" placeholder="Add Comment ..." type="text" name="body" />
+                    <input class="btn btn-primary" type="submit" value="Add" name="submit" />  
+                 </form>
+            </div>
+      
+        </div>
+       
     </div>
 {% endblock content %}

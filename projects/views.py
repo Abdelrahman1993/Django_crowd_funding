@@ -23,7 +23,7 @@ def project_details(request, project_id):
 def new_comment(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     comment = Comment(
-        user_id=request.user, body=request.POST['body'],
+        user_id=request.user.id, body=request.POST['body'],
         project_id=project_id)
     comment.save()
     return redirect('projects:project_details', project_id=project_id)
@@ -38,7 +38,8 @@ def delete_comment(request, comment_id, project_id):
 def edit_comment(request, comment_id, project_id):
     project = Project.objects.get(pk=project_id)
     comment = Comment.objects.get(pk=comment_id)
-    return render(request, 'projects/edit_comment.html', {'project': project, 'comment_id': comment_id})
+    picture = Picture.objects.all().filter(project_id=project_id)
+    return render(request, 'projects/edit_comment.html', {'project': project, 'comment_id': comment_id,'picture':picture[0]})
 
 
 def update_comment(request, comment_id, project_id):
@@ -50,13 +51,33 @@ def update_comment(request, comment_id, project_id):
 
 def new_reply(request, comment_id, project_id):
     project = get_object_or_404(Project, pk=project_id)
-    return render(request, 'projects/new_reply.html', {'comment_id': comment_id, 'project': project})
+    picture = Picture.objects.all().filter(project_id=project_id)
+    return render(request, 'projects/new_reply.html', {'comment_id': comment_id, 'project': project,'picture':picture[0]})
 
 
 def add_reply(request, comment_id, project_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     reply = Reply(
-        user_id=request.user, body=request.POST['body'],
+        user_id=request.user.id, body=request.POST['body'],
         comment_id=comment_id)
     reply.save()
+    return redirect('projects:project_details', project_id=project_id)
+
+def delete_reply(request, comment_id, project_id, reply_id):
+    Reply.objects.filter(pk=reply_id).delete()
+    project = get_object_or_404(Project, pk=project_id)
+    return redirect('projects:project_details', project_id=project_id)
+
+
+def edit_reply(request, comment_id, project_id, reply_id):
+    project = Project.objects.get(pk=project_id)
+    comment = Comment.objects.get(pk=comment_id)
+    picture = Picture.objects.all().filter(project_id=project_id)
+    return render(request, 'projects/edit_reply.html', {'project': project, 'comment_id':comment_id, 'reply_id': reply_id,'picture':picture[0]})
+
+
+def update_reply(request, comment_id, project_id, reply_id):
+    body = request.POST['body']
+    Reply.objects.filter(pk=reply_id).update(body=body)
+    project = get_object_or_404(Project, pk=project_id)
     return redirect('projects:project_details', project_id=project_id)

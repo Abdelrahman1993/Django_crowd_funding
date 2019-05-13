@@ -10,5 +10,9 @@ urlpatterns = [
     path('<int:project_id>/updateComment/<int:comment_id>', views.update_comment, name="updateComment"),
     path('<int:project_id>/comments/<int:comment_id>/newReply', views.new_reply, name="newReply"),
     path('<int:project_id>/comments/<int:comment_id>/addReply', views.add_reply, name="addReply"),
+    path('<int:project_id>/comments/<int:comment_id>/deleteReply/<int:reply_id>', views.delete_reply, name="deleteReply"),
+    path('<int:project_id>/comments/<int:comment_id>/editReply/<int:reply_id>', views.edit_reply, name="editReply"),
+    path('<int:project_id>/comments/<int:comment_id>/updateReply/<int:reply_id>', views.update_reply, name="updateReply"),
+
     
 ]
