@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from projects.models import Project
+from django.db.models import Q
 # Create your views here.
 def index(request):
     #print(request.user)
     projects = Project.objects.all()[:5]
     highest_five_rated = Project.objects.all()[:5]
-    latest_five = Project.objects.all()[:5]
-    featured_five = Project.objects.all()[:5]
+    latest_five = Project.objects.order_by('-start_time')[:5]
+    featured_five = Project.objects.filter(featured = True)
     #print (projects[0].picture_set.all)
     context = {
         'highest_five_rated': highest_five_rated ,
@@ -15,3 +16,15 @@ def index(request):
         'featured_five': featured_five,
     }
     return render(request, 'pages/index.html', context)
+
+def search(request):
+    if request.GET.get("search"):
+        search_keyword = request.GET.get("search")
+        search_set = Project.objects.filter(Q(title__icontains = search_keyword) | Q(tages__name__icontains = search_keyword)).distinct()
+        #search_set = Project.objects.filter(tages__name__startswith = search_keyword)
+        context = {
+            "projects_search": search_set
+        }
+        return render(request, 'pages/index.html',context)
+    else:
+         return render(request, 'pages/index.html')

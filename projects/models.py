@@ -16,6 +16,9 @@ class Category(models.Model):
 class Tage(models.Model):
     name = models.CharField(max_length=200)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
 
@@ -30,6 +33,11 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     tages = TaggableManager()
+
+    tages = models.ManyToManyField(Tage, blank=True)
+
+    class Meta:
+        ordering = ('title',)
 
     def __str__(self):
         return self.title
