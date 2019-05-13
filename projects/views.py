@@ -14,6 +14,7 @@ def project_details(request, _id):
 
 
 def create(request):
+    category = Category.objects.all()
     if request.method == 'POST':
         form = CreateProject(request.POST)
         if form:
@@ -27,20 +28,18 @@ def create(request):
             project.save()
             if project.id:
                 form = CreateProject()
-                category = Category.objects.all()
-                context = {
+                contextPost = {
                     'form': form,
                     'category': category,
                     'done': "broject has been created"
                 }
-                return render(request, 'projects/create.html', context)
+                return render(request, 'projects/create.html', contextPost)
             return HttpResponse('nooooooooooooooooo')
         return HttpResponse(form.fields)
     else:
         form = CreateProject()
-        category = Category.objects.all()
-        context = {
+        contextGet = {
             'form': form,
-            'category': category
+            'category': category,
         }
-        return render(request, 'projects/create.html', context)
+        return render(request, 'projects/create.html', contextGet)
