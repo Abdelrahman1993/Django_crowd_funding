@@ -1,7 +1,7 @@
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from .forms import SignupForm
+from .forms import SignupForm, EditProfileForm
 from django.contrib.sites.shortcuts import get_current_site
 from .models import User
 from django.core.mail import EmailMessage
@@ -11,7 +11,9 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
 from django.contrib.auth import authenticate, login, logout, password_validation
-from django.contrib.auth.hashers import check_password
+from projects.models import Donation, Project
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
 
 
 class Signup(View):
@@ -73,6 +75,8 @@ def user_login(request):
     email = request.POST.get('email')
     password = request.POST.get('password')
     user = User.objects.get(email__iexact=email)
+    if not user:
+      return HttpResponse("user not exist")
     if user and user.check_password(password):
       if user:
         if user.is_active:
@@ -85,45 +89,19 @@ def user_login(request):
         print("Someone tried to login and failed.")
         print("They used username: {} and password: {}".format(email, password))
         return HttpResponse("Invalid login details given")
-    else:
-      return HttpResponse("user not exist")
   else:
     return render(request, 'accounts/login.html', {})
 
-# def my_profile(request, pk):
-#   user = User.objects.filter(id=pk)[0]
-#   questions = Question.objects.filter(status=True, receiver=user)
-#   likes = []
-#   like_count = 0
-#   quest_count = len(questions)
-#   for question in questions:
-#     like = Like.objects.filter(user=request.user, question=question)
-#     if like:
-#       likes.append(1)
-#       like_count += 1
-#     else:
-#       likes.append(0)
-#   mylist = zip(questions, likes)
-#   current_user = User.objects.get(username=request.user)
-#
-#   your_friend = False
-#   friends = Friendship.objects.filter(creator=current_user)
-#   for ff in friends:
-#     if ff.friend == user:
-#       your_friend = True
-#
-#   flag = True
-#   if user == current_user:
-#     flag = False
-#
-#   context = {
-#     'your_friend': your_friend,
-#     'flag': flag,
-#     'questions': mylist,
-#     'like_count': like_count,
-#     'quest_count': quest_count,
-#     'user': user,
-#     'current_user': current_user,
-#   }
-#
-#   return render(request, 'accounts/profile.html', context)
+
+
+# edit user profile
+class Edit_profile(UpdateView):
+  form_class = EditProfileForm
+  template_name = 'accounts/edit_profile.html'
+
+  def get_success_url(self):
+    return reverse_lazy('accounts:my_profile', kwargs={'pk': self.kwargs['pk']})
+
+  def get_object(self, queryset=None):
+    obj = User.objects.get(id=self.kwargs['pk'])
+    return obj
