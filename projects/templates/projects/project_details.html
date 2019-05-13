@@ -2,23 +2,38 @@
 
 {% block content %}
     <div class="container">
-        <h1>single project page</h1>
-        <p>id = {{ project.id }}</p>
-        <p> title = {{ project.title }}</p>
-        <p> details = {{ project.details }}</p>
-
-        <span>comments : </span></br>
+        <h3 class="display-3 text-center" >{{ project.title }}</h3>
+        <img src="{{ picture.image.url }}" class="rounded mx-auto d-block" width="300" height="300" /><br />
+        <p class="font-weight-bold text-dark" > {{ project.details }}</p>
+        
+        <h5 class="font-weight-bold text-dark" > comments : </h5></br>
         {% for comment in project.comment_set.all %}
-        {{ comment.user.first_name }} {{ comment.user.last_name }} : <strong>{{ comment.body }}</strong>
-        <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
-        <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>
+        <span class="font-weight-bold text-primary" >  {{ comment.user.first_name }} {{ comment.user.last_name }} :</span> 
+        <span>{{ comment.body }}</span>
+        <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+        <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+        </a><br/>
+        <!-- <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a> -->
+        <!-- <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>    -->
+            {% for reply in comment.reply_set.all%}
+                <p style="margin-left:5%">
+                    <span class="font-weight-bold text-primary" > 
+                        {{ reply.user.first_name }} {{ reply.user.last_name }} :
+                    </span>
+                    <span>{{ reply.body }}</span>
+                </p>
+                {% endfor%}
+            <a style="margin-left:5%" class="btn btn-primary" role="button" href="{% url 'projects:newReply' comment.project.id comment.id %}" >Add Reply</a><br />
         {% endfor %}
 
-        <form action="{% url 'projects:addComment' project.id %}" method="post">
-            {% csrf_token %}
-            body : <input  type="text" name="body" />
-            user : <input  type="text" name="user_id" />
-            <input type="submit" value="Add" name="submit" />
+        <form class="form-group" action="{% url 'projects:addComment' project.id %}" method="post">
+            {% csrf_token %} 
+            <input class="form-control input-lg" placeholder="Add Comment ..." type="text" name="body" />
+            <input  type="text" name="user_id" />
+            <input class="btn btn-primary" type="submit" value="Add" name="submit" />
         </form>
     </div>
 {% endblock content %}
