@@ -4,5 +4,8 @@ app_name='projects'
 urlpatterns = [
     path('', views.index, name="index"),
     path('<int:project_id>/addComment', views.new_comment, name="addComment"),
+    path('<int:project_id>/deleteComment/<int:comment_id>', views.delete_comment, name="deleteComment"),
+    path('<int:project_id>/editComment/<int:comment_id>', views.edit_comment, name="editComment"),
+    path('<int:project_id>/updateComment/<int:comment_id>', views.update_comment, name="updateComment"),
     path('<int:project_id>/', views.project_details, name="project_details")
 ]

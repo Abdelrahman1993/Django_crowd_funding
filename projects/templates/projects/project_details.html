@@ -9,7 +9,9 @@
 
         <span>comments : </span></br>
         {% for comment in project.comment_set.all %}
-        {{ comment.user.first_name }} {{ comment.user.last_name }} : <strong>{{ comment.body }}</strong></br>
+        {{ comment.user.first_name }} {{ comment.user.last_name }} : <strong>{{ comment.body }}</strong>
+        <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
+        <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>
         {% endfor %}
 
         <form action="{% url 'projects:addComment' project.id %}" method="post">

@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>single project page</h1>
+        <p>info about project  id = {{ project.id }}</p>
+        <p> title = {{ project.title }}</p>
+        <p> details = {{ project.details }}</p>
+
+        <span>comments : </span></br>
+        {% for comment in project.comment_set.all %}
+        {{ comment.user.first_name }} {{ comment.user.last_name }} :
+        {% if comment_id == comment.id %}
+           <form action="{% url 'projects:updateComment' comment.project.id comment.id %}" method="post">
+                {% csrf_token %}
+            <input type="text" value="{{ comment.body }}" name="body" />
+            <input type="submit" value="Edit" name="submit" />
+        </form>
+        {% else %}   
+           <strong>{{ comment.body }}</strong>
+        {% endif %}   
+         <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a>
+        <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>
+        {% endfor %}
+    </div>
+{% endblock content %}
