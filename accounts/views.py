@@ -109,3 +109,10 @@ class Edit_profile(UpdateView):
 
 def warn(request):
   return render(request, 'accounts/warn.html', {})
+
+def delete_account(request, pk):
+  user = User.objects.get(id=pk);
+  logout(request)
+  user.delete()
+  return redirect('pages:index')
+
