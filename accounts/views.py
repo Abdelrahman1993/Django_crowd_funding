@@ -105,3 +105,7 @@ class Edit_profile(UpdateView):
   def get_object(self, queryset=None):
     obj = User.objects.get(id=self.kwargs['pk'])
     return obj
+
+
+def warn(request):
+  return render(request, 'accounts/warn.html', {})
