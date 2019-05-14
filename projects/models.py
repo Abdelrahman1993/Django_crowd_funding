@@ -34,8 +34,6 @@ class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     tages = TaggableManager()
 
-    tages = models.ManyToManyField(Tage, blank=True)
-
     class Meta:
         ordering = ('title',)
 
