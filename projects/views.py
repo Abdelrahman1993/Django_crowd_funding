@@ -9,7 +9,6 @@ from .models import Comment, Project, Reply, Picture, Category
 
 # Create your views here.
 
-
 def index(request):
     return render(request, 'projects/index.html')
 

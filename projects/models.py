@@ -4,7 +4,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from accounts.models import User
 from taggit.managers import TaggableManager
 
-
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=200)
