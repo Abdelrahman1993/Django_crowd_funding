@@ -92,6 +92,17 @@ def user_login(request):
   else:
     return render(request, 'accounts/login.html', {})
 
+def my_profile(request, pk):
+  user = User.objects.filter(id=pk)[0]
+  my_projects = Project.objects.filter(user=request.user)
+  my_donations = Donation.objects.filter(user=request.user)
+  context = {
+    'user': user,
+    'projects': my_projects,
+    'donations': my_donations,
+  }
+
+  return render(request, 'accounts/profile.html', context)
 
 
 # edit user profile
