@@ -2,214 +2,214 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-md-12 mt-4">
-    {% if highest_five_rated %}
-    <div id="demo" class="carousel slide" data-ride="carousel">
-      <ul class="carousel-indicators">
-        <li data-target="#demo" data-slide-to="0" class="active"></li>
-        <li data-target="#demo" data-slide-to="1"></li>
-        <li data-target="#demo" data-slide-to="2"></li>
-        <li data-target="#demo" data-slide-to="3"></li>
-        <li data-target="#demo" data-slide-to="4"></li>
-      </ul>
-      <div class="carousel-inner">
-
-        {% for project in  highest_five_rated %}
-        <div {% if forloop.counter0 == 0 %} class="carousel-item active" {% else %} class="carousel-item" {% endif %}>
-          {% for picture in project.picture_set.all|slice:":1" %}
-          <img src="{{ picture.image.url }}" alt="Los Angeles" width="1100" height="500">
-          {% endfor %}
-          <div class="carousel-caption">
-            <h3>Los Angeles</h3>
-            <p>We had such a great time in LA!</p>
-          </div>
-        </div>
-        {% endfor %}
-
-
-
-      </div>
-      <a class="carousel-control-prev" href="#demo" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#demo" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
-    </div>
-
-    {% else %}
-    {% if 'search' not in request.path %}
-    <div class="col-md-12">highest five not available</div>
-    {% endif %}
-    {% endif %}
-  </div>
-</div>
-
-
-<div class="container">
   <div class="row">
-    <div class="row col-md-12 mt-4">
-      <form class="row col-12 example text-center" action="{% url 'pages:search' %}">
-        <div class="offset-3 col-5 row">
-          <input class="col-12" id="search_input" name="search" type="text" placeholder="Search.." name="search">
+    <div class="col-md-12 mt-4">
+      {% if highest_five_rated %}
+        <div id="demo" class="carousel slide" data-ride="carousel">
+          <ul class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+            <li data-target="#demo" data-slide-to="1"></li>
+            <li data-target="#demo" data-slide-to="2"></li>
+            <li data-target="#demo" data-slide-to="3"></li>
+            <li data-target="#demo" data-slide-to="4"></li>
+          </ul>
+          <div class="carousel-inner">
+
+            {% for project in  highest_five_rated %}
+              <div {% if forloop.counter0 == 0 %} class="carousel-item active" {% else %}
+                                                  class="carousel-item" {% endif %}>
+                {% for picture in project.picture_set.all|slice:":1" %}
+                  <img src="{{ picture.image.url }}" alt="Los Angeles" width="1100" height="500">
+                {% endfor %}
+                <div class="carousel-caption">
+                  <h3>Los Angeles</h3>
+                  <p>We had such a great time in LA!</p>
+                </div>
+              </div>
+            {% endfor %}
+
+
+          </div>
+          <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </a>
+          <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </a>
         </div>
-        <div class="col-2 row">
-          <button class="col-12" id="search_btn" type="submit"><i class="fa fa-search"></i></button>
-        </div>
-      </form>
+
+      {% else %}
+        {% if 'search' not in request.path %}
+          <div class="col-md-12">highest five not available</div>
+        {% endif %}
+      {% endif %}
     </div>
   </div>
-</div>
 
-<!--start of search-->
+
+  <div class="container">
+    <div class="row">
+      <div class="row col-md-12 mt-4">
+        <form class="row col-12 example text-center" action="{% url 'pages:search' %}">
+          <div class="offset-3 col-5 row">
+            <input class="col-12" id="search_input" name="search" type="text" placeholder="Search.." name="search">
+          </div>
+          <div class="col-2 row">
+            <button class="col-12" id="search_btn" type="submit"><i class="fa fa-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--start of search-->
   <section id="projects_search" class="py-4">
-  <div class="container">
-    <div class="row">
-      {% if projects_search %}
-      {% for project in projects_search %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card">
-          {% for picture in project.picture_set.all|slice:":1" %}
-          <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+    <div class="container">
+      <div class="row">
+        {% if projects_search %}
+          {% for project in projects_search %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card">
+                {% for picture in project.picture_set.all|slice:":1" %}
+                  <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+                {% endfor %}
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">${{ project.target }}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="text-center">
+                    <h5 class="text-primary">{{ project.title }}</h5>
+                    <h6 class="text-primary">Owner: {{ project.user.first_name }}</h6>
+                    <p>Category: {{ project.category }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-1 text-secondary">
+                    <div class="col-6">
+                      <div>Start</div>
+                      <div>{{ project.start_time }}</div>
+                    </div>
+                    <div class="col-6">
+                      <div>End</div>
+                      <div>{{ project.end_time }}</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
           {% endfor %}
-          <div class="card-img-overlay">
-            <h2>
-              <span class="badge badge-secondary text-white">${{project.target}}</span>
-            </h2>
-          </div>
-          <div class="card-body">
-            <div class="text-center">
-              <h5 class="text-primary">{{project.title}}</h5>
-              <h6 class="text-primary">Owner: {{project.user.first_name}}</h6>
-              <p>Category: {{project.category}}</p>
-            </div>
-            <hr>
-            <div class="row py-1 text-secondary">
-              <div class="col-6">
-                <div>Start</div>
-                <div>{{project.start_time}}</div>
-              </div>
-              <div class="col-6">
-                <div>End</div>
-                <div>{{project.end_time}}</div>
-              </div>
-            </div>
-            <hr>
-            <a href="#" class="btn btn-primary btn-block">More Info</a>
-          </div>
-        </div>
+        {% else %}
+
+        {% endif %}
       </div>
-      {% endfor %}
-      {% else %}
-      
-      {% endif %}
     </div>
-  </div>
-</section>
+  </section>
 
-<!--end of search-->
+  <!--end of search-->
 
-<!--start of latest five-->
-<section id="latest_five_projects" class="py-4">
-  <div class="container">
-    {% if 'search' not in request.path %}
-    <div class="h1 text-center">Latest Five Projects</div>
-    {% endif %}
-    <div class="row">
-      {% if latest_five %}
-      {% for project in latest_five %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card">
-          {% for picture in project.picture_set.all|slice:":1" %}
-          <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
-          {% endfor %}
-          <div class="card-img-overlay">
-            <h2>
-              <span class="badge badge-secondary text-white">${{project.target}}</span>
-            </h2>
-          </div>
-          <div class="card-body">
-            <div class="text-center">
-              <h5 class="text-primary">{{project.title}}</h5>
-              <h6 class="text-primary">Owner: {{project.user.first_name}}</h6>
-              <p>Category: {{project.category}}</p>
-            </div>
-            <hr>
-            <div class="row py-1 text-secondary">
-              <div class="col-6">
-                <div>Start</div>
-                <div>{{project.start_time}}</div>
-              </div>
-              <div class="col-6">
-                <div>End</div>
-                <div>{{project.end_time}}</div>
-              </div>
-            </div>
-            <hr>
-            <a href="#" class="btn btn-primary btn-block">More Info</a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-      {% else %}
+  <!--start of latest five-->
+  <section id="latest_five_projects" class="py-4">
+    <div class="container">
       {% if 'search' not in request.path %}
-      <h1>No Projects Available</h1>
+        <div class="h1 text-center">Latest Five Projects</div>
       {% endif %}
-      {% endif %}
-    </div>
-  </div>
-</section>
-<!--end of latest five-->
-
-<!--start of featured five-->
-<section id="latest_five_projects" class="py-4">
-  <div class="container">
-    <div class="row">
-      {% if featured_five %}
-      <div class="h1 text-center col-md-12"> Featured Projects </div>
-      {% for project in featured_five %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card">
-          {% for picture in project.picture_set.all|slice:":1" %}
-          <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+      <div class="row">
+        {% if latest_five %}
+          {% for project in latest_five %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card">
+                {% for picture in project.picture_set.all|slice:":1" %}
+                  <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+                {% endfor %}
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">${{ project.target }}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="text-center">
+                    <h5 class="text-primary">{{ project.title }}</h5>
+                    <h6 class="text-primary">Owner: {{ project.user.first_name }}</h6>
+                    <p>Category: {{ project.category }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-1 text-secondary">
+                    <div class="col-6">
+                      <div>Start</div>
+                      <div>{{ project.start_time }}</div>
+                    </div>
+                    <div class="col-6">
+                      <div>End</div>
+                      <div>{{ project.end_time }}</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
           {% endfor %}
-          <div class="card-img-overlay">
-            <h2>
-              <span class="badge badge-secondary text-white">${{project.target}}</span>
-            </h2>
-          </div>
-          <div class="card-body">
-            <div class="text-center">
-              <h5 class="text-primary">{{project.title}}</h5>
-              <h6 class="text-primary">Owner: {{project.user.first_name}}</h6>
-              <p>Category: {{project.category}}</p>
-            </div>
-            <hr>
-            <div class="row py-1 text-secondary">
-              <div class="col-6">
-                <div>Start</div>
-                <div>{{project.start_time}}</div>
-              </div>
-              <div class="col-6">
-                <div>End</div>
-                <div>{{project.end_time}}</div>
-              </div>
-            </div>
-            <hr>
-            <a href="#" class="btn btn-primary btn-block">More Info</a>
-          </div>
-        </div>
+        {% else %}
+          {% if 'search' not in request.path %}
+            <h1>No Projects Available</h1>
+          {% endif %}
+        {% endif %}
       </div>
-      {% endfor %}
-      {% else %}
-      {% if 'search' not in request.path %}
-      <h1>No Featured Available</h1>
-      {% endif %}
-      {% endif %}
     </div>
-  </div>
-</section>
-<!--end of featured five-->
+  </section>
+  <!--end of latest five-->
+
+  <!--start of featured five-->
+  <section id="latest_five_projects" class="py-4">
+    <div class="container">
+      <div class="row">
+        {% if featured_five %}
+          <div class="h1 text-center col-md-12"> Featured Projects</div>
+          {% for project in featured_five %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card">
+                {% for picture in project.picture_set.all|slice:":1" %}
+                  <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+                {% endfor %}
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">${{ project.target }}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="text-center">
+                    <h5 class="text-primary">{{ project.title }}</h5>
+                    <h6 class="text-primary">Owner: {{ project.user.first_name }}</h6>
+                    <p>Category: {{ project.category }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-1 text-secondary">
+                    <div class="col-6">
+                      <div>Start</div>
+                      <div>{{ project.start_time }}</div>
+                    </div>
+                    <div class="col-6">
+                      <div>End</div>
+                      <div>{{ project.end_time }}</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% if 'search' not in request.path %}
+            <h1>No Featured Available</h1>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <!--end of featured five-->
 
 {% endblock content %}

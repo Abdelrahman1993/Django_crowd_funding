@@ -10,12 +10,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Tage(models.Model):
     name = models.CharField(max_length=200)
     class Meta:
         ordering = ('name',)
     def __str__(self):
         return self.name
+
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
@@ -32,6 +34,7 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+
 class Picture(models.Model):
     image = models.ImageField(upload_to = 'photos/')
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
@@ -42,15 +45,18 @@ class Comment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+
 class Reply(models.Model):
     body = models.TextField()
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+
 class Donation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField()
+
 
 class Rate(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -63,10 +69,12 @@ class InAppropriateProject(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_appropriate = models.BooleanField()
 
+
 class InAppropriateComment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_appropriate = models.BooleanField()
+
 
 class InAppropriateReply(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
