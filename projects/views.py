@@ -10,7 +10,6 @@ from django.db.models import Sum
 
 # Create your views here.
 
-
 def index(request):
     return render(request, 'projects/index.html')
 
@@ -103,6 +102,11 @@ def create(request):
     category = Category.objects.all()
     if request.method == 'POST':
         form = CreateProject(request.POST)
+        print("===================================")
+        print(request.POST)
+        print("===================================")
+        print(request.POST['Images'])
+        print("===================================")
         if form:
             project = Project()
             project.title = form['title'].value()
@@ -113,18 +117,30 @@ def create(request):
             project.tages = form['tages'].value()
             project.save()
             if project.id:
-                form = CreateProject()
-                contextPost = {
-                    'form': form,
-                    'category': category,
-                    'done': "broject has been created"
-                }
-                return render(request, 'projects/create.html', contextPost)
-            return HttpResponse('nooooooooooooooooo')
+                if request.POST['Images']:
+                    picture = Picture()
+                    picture.project_id = project.id
+                    picture.image = request.POST['Images']
+                    picture.save()
+                    form = CreateProject()
+                    if picture.id:
+                        contextpost = {
+                            'form': form,
+                            'category': category,
+                            'done': "broject has been created and picture saved"
+                        }
+                    else:
+                        contextpost = {
+                            'form': form,
+                            'category': category,
+                            'done': "broject has been created and picture dose not saved"
+                        }
+                    return render(request, 'projects/create.html', contextpost)
+                return HttpResponse('nooooooooooooooooo')
         return HttpResponse(form.fields)
     else:
         form = CreateProject()
-        contextGet = {
+        contextget = {
             'form': form,
             'category': category,
         }

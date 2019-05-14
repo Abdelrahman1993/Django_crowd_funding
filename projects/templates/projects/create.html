@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h1>create your project</h1>
-        {% if done  %}
+        {% if done %}
             {{ done }}
         {% endif %}
         <div>
@@ -46,6 +46,21 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+
+{#            {% for field in formimage %}#}
+{#                    <div class="col-12 row mt-3">#}
+{#                        <div class="col-3">#}
+{#                            <label for="{{ field.id_for_label }}">#}
+{#                                {{ field.html_name }}#}
+{#                            </label>#}
+{#                        </div>#}
+{#                            <div class="col-9 row">#}
+{#                                {{ field }}#}
+{#                            </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+
+
                 <div class="mb-3">
                     <button type="submit" class="btn btn-lg btn-primary">Create</button>
                 </div>

@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+  <div class="card" style="width: 22rem;float: left; margin-top: 5rem; margin-right: 10rem;">
+    <img class="card-img-top" src="{% if user.image %}
+                 {{ user.image.url }}
+               {% else %}
+                 {% static 'accounts/imgs/default.jpg' %}
+               {% endif %}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">FirstName:- {{ user.first_name }}</h5>
+      <h5 class="card-title">LastName:- {{ user.last_name }}</h5>
+      <h5 class="card-title">Email:- {{ user.email }}</h5>
+      <h5 class="card-title">Phone:- {{ user.phone }}</h5>
+      {% if user.facebook_profile %}
+        <h5 class="card-title">Facebook profile:-
+          <a href="{{ user.facebook_profile }}">
+            {{ user.facebook_profile }}
+          </a>
+        </h5>
+      {% endif %}
+      {% if user.country %}
+        <h5 class="card-title">Country:- {{ user.country }}</h5>
+      {% endif %}
+    </div>
+    {% if request.user == user %}
+      <a class="btn btn-warning" href="{% url 'accounts:edit_profile' user.id %}">Update my profile</a>
+      <a style="margin-top: 1rem;" class="btn btn-danger" href="{% url 'accounts:warn' %}">Delete my account</a>
+    {% endif %}
+  </div>
+  <div style="width: 50rem; float: left;margin-top: 2rem;">
+    <h2 style="text-align: center;">my Projects</h2>
+    <table class="table table-dark table-striped">
+      <thead>
+      <tr>
+        <th>title</th>
+        <th>Category</th>
+        <th>Tages</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for p in projects %}
+        <tr>
+          <td>{{ p.title }}</td>
+          <td>{{ p.category }}</td>
+          <td>
+            {% for t in p.tages.all %}
+              <p style="border: 1px solid gray;">{{ t.name }}</p>
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div style="width: 50rem; float: right;margin-top: 2rem;margin-right: 10rem;">
+    <h2 style="text-align: center;">my Donations</h2>
+    <table class="table table-dark table-striped">
+      <thead>
+      <tr>
+        <th>Project</th>
+        <th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for d in donations %}
+        <tr>
+          <td>{{ d.project.title }}</td>
+          <td>{{ d.amount }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div style="clear: both;"></div>
+{% endblock %}
+

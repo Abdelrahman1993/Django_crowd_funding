@@ -4,7 +4,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from accounts.models import User
 from taggit.managers import TaggableManager
 
-
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -33,8 +32,6 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     tages = TaggableManager()
-
-    tages = models.ManyToManyField(Tage, blank=True)
 
     class Meta:
         ordering = ('title',)

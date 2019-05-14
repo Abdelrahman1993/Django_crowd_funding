@@ -15,4 +15,8 @@ class CreateProject(forms.Form):
                                   widget=forms.DateTimeInput(attrs={'type': 'date', 'class': 'col-12 btn-lg'}))
     tages = TagField(label="Tags", required="true",
                      widget=forms.TextInput(attrs={'class': 'col-12 btn-lg'}))
-    # image = forms.ImageField()
+    Images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
+
+# class UploadImages(forms.Form):
+#     Images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
