@@ -1,34 +1,42 @@
 {% load static %}
-s
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="#" class="logo" alt="">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <ul class="navbar-nav">
-        <li
-            {% if request.path == '/' %}
-              class="nav-item active mr-3"
-            {% else %}
-              class="nav-item mr-3"
-            {% endif %}
-        >
-          <a class="nav-link" href="{% url 'pages:index' %}">Home</a>
-        </li>
-        <li
-            {% if 'projects' in request.path %}
-              class="nav-item active mr-3"
-            {% else %}
-              class="nav-item mr-3"
-            {% endif %}
-        >
-          <a class="nav-link" href="{% url 'projects:index' %}">Projects</a>
-        </li>
-      </ul>
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="#" class="logo" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="navbar-nav">
+                <li
+                        {% if request.path == '/' %}
+                            class="nav-item active mr-3"
+                        {% else %}
+                            class="nav-item mr-3"
+                        {% endif %}
+                >
+                    <a class="nav-link" href="{% url 'pages:index' %}">Home</a>
+                </li>
+                <li
+                        {% if  request.path == '/projects/' %}
+                            class="nav-item active mr-3"
+                        {% else %}
+                            class="nav-item mr-3"
+                        {% endif %}
+                >
+                    <a class="nav-link" href="{% url 'projects:index' %}">Projects</a>
+                </li>
+                <li
+                        {% if  request.path == '/projects/create' %}
+                            class="nav-item active mr-3"
+                        {% else %}
+                            class="nav-item mr-3"
+                        {% endif %}
+                >
+                    <a class="nav-link" href="{% url 'projects:create' %}">create</a>
+                </li>
+            </ul>
 
       <ul class="navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
@@ -65,5 +73,4 @@ s
         {% endif %}
       </ul>
     </div>
-  </div>
 </nav>

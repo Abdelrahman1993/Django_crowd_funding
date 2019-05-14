@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>create your project</h1>
+        {% if done %}
+            {{ done }}
+        {% endif %}
+        <div>
+            <form class="row" class="create" method="POST">
+                {% csrf_token %}
+                {% for error in error %}
+                    <p class="danger">
+                        {{ error }}
+                    </p>
+                {% empty %}
+                {% endfor %}
+                {% for field in form %}
+                    <div class="col-12 row mt-3">
+                        <div class="col-3">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.html_name }}
+                            </label>
+                        </div>
+                        {% if field.html_name == 'category' %}
+                            <select class="btn btn-lg" id='selectedTask' name="category">
+                                {% for value in category %}
+                                    <option value="{{ value.id }}">{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="col-9 row">
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <p class="help">
+                                        {{ field.help_text }}
+                                    </p>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <p class="help">
+                                        {{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+{#            {% for field in formimage %}#}
+{#                    <div class="col-12 row mt-3">#}
+{#                        <div class="col-3">#}
+{#                            <label for="{{ field.id_for_label }}">#}
+{#                                {{ field.html_name }}#}
+{#                            </label>#}
+{#                        </div>#}
+{#                            <div class="col-9 row">#}
+{#                                {{ field }}#}
+{#                            </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-lg btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

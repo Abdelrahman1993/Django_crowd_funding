@@ -73,7 +73,7 @@
                 {% for picture in project.picture_set.all|slice:":1" %}
                   <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
                 {% endfor %}
-                <div class="card-img-overlay">
+                <div>
                   <h2>
                     <span class="badge badge-secondary text-white">${{ project.target }}</span>
                   </h2>
@@ -96,7 +96,8 @@
                     </div>
                   </div>
                   <hr>
-                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                  <a href="{% url 'projects:project_details' project.id %}" class="btn btn-primary btn-block">More
+                    Info</a>
                 </div>
               </div>
             </div>
@@ -124,7 +125,7 @@
                 {% for picture in project.picture_set.all|slice:":1" %}
                   <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
                 {% endfor %}
-                <div class="card-img-overlay">
+                <div>
                   <h2>
                     <span class="badge badge-secondary text-white">${{ project.target }}</span>
                   </h2>
@@ -147,7 +148,8 @@
                     </div>
                   </div>
                   <hr>
-                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                  <a href="{% url 'projects:project_details' project.id %}" class="btn btn-primary btn-block">More
+                    Info</a>
                 </div>
               </div>
             </div>
@@ -170,15 +172,14 @@
           <div class="h1 text-center col-md-12"> Featured Projects</div>
           {% for project in featured_five %}
             <div class="col-md-6 col-lg-4 mb-4">
-              <div class="card">
-                {% for picture in project.picture_set.all|slice:":1" %}
-                  <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
-                {% endfor %}
-                <div class="card-img-overlay">
-                  <h2>
-                    <span class="badge badge-secondary text-white">${{ project.target }}</span>
-                  </h2>
-                </div>
+            <div class="card">
+              {% for picture in project.picture_set.all|slice:":1" %}
+                <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+              {% endfor %}
+              <div>
+                <h2>
+                  <span class="badge badge-secondary text-white">${{ project.target }}</span>
+                </h2>
                 <div class="card-body">
                   <div class="text-center">
                     <h5 class="text-primary">{{ project.title }}</h5>
@@ -197,7 +198,8 @@
                     </div>
                   </div>
                   <hr>
-                  <a href="#" class="btn btn-primary btn-block">More Info</a>
+                  <a href="{% url 'projects:project_details' project.id %}" class="btn btn-primary btn-block">More
+                    Info</a>
                 </div>
               </div>
             </div>
@@ -207,9 +209,10 @@
             <h1>No Featured Available</h1>
           {% endif %}
         {% endif %}
+        </div>
       </div>
-    </div>
   </section>
   <!--end of featured five-->
 
 {% endblock content %}
+

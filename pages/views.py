@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
+    #print(request.user)
     projects = Project.objects.all()[:5]
     highest_five_rated = Project.objects.all()[:5]
     latest_five = Project.objects.order_by('-start_time')[:5]
