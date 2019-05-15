@@ -7,11 +7,19 @@ from .formCreat import CreateProject
 from .models import Comment, Project, Reply, Picture, Category, Donation
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.core.paginator import Paginator
 
 # Create your views here.
 
 def index(request):
-    return render(request, 'projects/index.html')
+    projects_list = Project.objects.all()
+    paginator = Paginator(projects_list, 9)
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    context = {
+        'projects': projects
+    }
+    return render(request, 'projects/index.html',context)
 
 
 def project_details(request, project_id):
