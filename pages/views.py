@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from projects.models import Project
 from django.db.models import Q
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+
+
 def index(request):
+    #print(request.user)
     projects = Project.objects.all()[:5]
     highest_five_rated = Project.objects.all()[:5]
     latest_five = Project.objects.order_by('-start_time')[:5]

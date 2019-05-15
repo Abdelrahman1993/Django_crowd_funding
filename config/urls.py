@@ -15,18 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .view import *
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import RedirectView
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('pages.urls')),
+    path('', include('pages.urls', namespace='pages')),
     path('projects/', include('projects.urls')),
-    path('', root),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
-    path('home/', root),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + staticfiles_urlpatterns()
+    url(r'^ratings/', include('star_ratings.urls', namespace='ratings')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + staticfiles_urlpatterns()
