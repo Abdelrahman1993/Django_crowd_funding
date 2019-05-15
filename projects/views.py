@@ -29,9 +29,11 @@ def project_details(request, project_id):
 
     donations = Donation.objects.all().filter(project_id=project_id)
     reached_target = Donation.objects.filter(project_id=project_id).aggregate(total = Sum('amount'))
-    percent = round(reached_target['total']*100/project.target,2)
-    print(reached_target['total'])
-   # print(reached_target[0].amount__sum)
+    print(reached_target)
+    if reached_target['total']:
+        percent = round(reached_target['total']*100/project.target,2)
+    else:
+        percent = 0
 
     return render(request, 'projects/project_details.html', {
         'project': project,
