@@ -16,6 +16,7 @@ urlpatterns = [
     path('<int:project_id>/comments/<int:comment_id>/editReply/<int:reply_id>', views.edit_reply, name="editReply"),
     path('<int:project_id>/comments/<int:comment_id>/updateReply/<int:reply_id>', views.update_reply, name="updateReply"),
     path('<int:project_id>/donate', views.donate, name="donate"),
+    path('<int:project_id>/comments/<int:comment_id>/replies/<int:reply_id>', views.report_reply, name="reportReply"),
 
     path('create', views.create, name="create"),
 
