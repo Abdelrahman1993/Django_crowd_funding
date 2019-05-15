@@ -20,9 +20,9 @@ def project_details(request, project_id):
     current_user = request.user
 
     donations = Donation.objects.all().filter(project_id=project_id)
-    reached_target = Donation.objects.aggregate(total = Sum('amount'))
+    reached_target = Donation.objects.filter(project_id=project_id).aggregate(total = Sum('amount'))
     percent = round(reached_target['total']*100/project.target,2)
-    #print(reached_target.total)
+    print(reached_target['total'])
    # print(reached_target[0].amount__sum)
 
     return render(request, 'projects/project_details.html', {
@@ -148,10 +148,13 @@ def create(request):
 
 
 def donate(request, project_id):
-    project = get_object_or_404(Project, pk=project_id)
-    donation = Donation(
-        user_id=request.user.id,
-        amount=request.POST['donation'],
-        project_id=project_id)
-    donation.save()
-    return redirect('projects:project_details', project_id=project_id)
+    if request.POST.get('donation'):
+        project = get_object_or_404(Project, pk=project_id)
+        donation = Donation(
+            user_id=request.user.id,
+            amount=request.POST['donation'],
+            project_id=project_id)
+        donation.save()
+        return redirect('projects:project_details', project_id=project_id)
+    else:
+        return redirect('projects:project_details', project_id=project_id)
