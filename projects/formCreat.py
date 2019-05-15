@@ -18,5 +18,7 @@ class CreateProject(forms.Form):
     Images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
 
+
+
 # class UploadImages(forms.Form):
 #     Images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
