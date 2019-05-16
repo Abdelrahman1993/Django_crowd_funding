@@ -119,7 +119,14 @@ class Edit_profile(UpdateView):
 
 
 def warn(request):
-  return render(request, 'accounts/warn.html', {})
+  context = {
+    'cancel': 'accounts:my_profile',
+    'delete': 'accounts:delete_account',
+    'msg': 'Are you sure you want to delete your account ? All your projects and donations will be deleted',
+    'cancel_id': request.user.id,
+    'delete_id': request.user.id,
+  }
+  return render(request, 'accounts/warn.html', context)
 
 
 def delete_account(request, pk):

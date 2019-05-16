@@ -28,9 +28,6 @@ class Project(models.Model):
     class Meta:
         ordering = ('title',)
 
-    def __str__(self):
-        return self.title
-
 
 class Tage(models.Model):
     name = models.CharField(max_length=200)
@@ -46,7 +43,6 @@ class Tage(models.Model):
 # def get_image_filename(instance, filename):
 #     id = instance.Project.id
 #     return "post_images/%s" % (id)
-
 
 class Picture(models.Model):
     image = models.ImageField(upload_to='photos/')
@@ -74,22 +70,23 @@ class Donation(models.Model):
 class Rate(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rate = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1), MaxValueValidator(100)])
+    rate = models.PositiveIntegerField(
+        blank=True, validators=[MinValueValidator(1), MaxValueValidator(100)])
 
 
 class InAppropriateProject(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_appropriate = models.BooleanField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # is_appropriate = models.BooleanField()
 
 
 class InAppropriateComment(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_appropriate = models.BooleanField()
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # is_appropriate = models.BooleanField()
 
 
 class InAppropriateReply(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_appropriate = models.BooleanField()
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # is_appropriate = models.BooleanField()
