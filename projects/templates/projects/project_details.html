@@ -16,7 +16,10 @@
       <hr>
       <p class="font-weight-bold text-dark"> {{ project.details }}</p>
       {% ratings project %}
-
+      {% if request.user == project.user %}
+        <br>
+        <a style="margin-top: 1rem;margin-bottom: 1rem;" class="btn btn-danger" href="{% url 'projects:warn' project.id %}">Delete project</a>
+      {% endif %}
       <!--start of target-->
       <div class="donaitors">
         <table class="table">

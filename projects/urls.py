@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
-app_name='projects'
+app_name = 'projects'
+
 urlpatterns = [
     path('', views.index, name="index"),
     path('<int:project_id>/', views.project_details, name="project_details"),
@@ -14,7 +15,8 @@ urlpatterns = [
     path('<int:project_id>/comments/<int:comment_id>/editReply/<int:reply_id>', views.edit_reply, name="editReply"),
     path('<int:project_id>/comments/<int:comment_id>/updateReply/<int:reply_id>', views.update_reply, name="updateReply"),
     path('<int:project_id>/donate', views.donate, name="donate"),
-
+    path('delete/<int:pk>', views.delete_project, name='project_delete'),
+    path('warn/<int:pk>', views.warn, name='warn'),
     path('create', views.create, name="create"),
 
 ]
