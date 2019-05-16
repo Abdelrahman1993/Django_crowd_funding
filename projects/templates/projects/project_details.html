@@ -3,138 +3,173 @@
 
 {% block content %}
   <div class="container">
-
+  {% if report_projects %}
+    <h1>Not Available</h1>
+  {% else %}
     <div class="container">
-      <h3 class="display-3 text-center">{{ project.title }}</h3>
-      <img src="{{ picture.image.url }}" class="rounded mx-auto d-block" width="300" height="300"/><br/>
-      <strong>Target : </strong><span class="text-primary">{{ project.target }}$</span> |
-      <strong>Start Time : </strong><span class="text-primary">{{ project.start_time }}</span> |
-      <strong>End Time : </strong><span class="text-primary">{{ project.end_time }}</span> <br/>
-      <strong>Created By : </strong><span
-        class="text-primary">{{ project.user.first_name }} {{ project.user.last_name }}</span><br/>
-      <strong>Category : </strong><span class="text-primary">{{ project.category.name }}</span> <br/>
-      <hr>
-      <p class="font-weight-bold text-dark"> {{ project.details }}</p>
-      {% ratings project %}
-      {% if request.user == project.user %}
-        <br>
-        <a style="margin-top: 1rem;margin-bottom: 1rem;" class="btn btn-danger" href="{% url 'projects:warn' project.id %}">Delete project</a>
-      {% endif %}
-      <!--start of target-->
+    <h3 class="display-3 text-center">{{ project.title }}</h3>
+    <img src="{{ picture.image.url }}" class="rounded mx-auto d-block" width="300" height="300"/><br/>
+    <strong>Target : </strong><span class="text-primary">{{ project.target }}$</span> |
+    <strong>Start Time : </strong><span class="text-primary">{{ project.start_time }}</span> |
+    <strong>End Time : </strong><span class="text-primary">{{ project.end_time }}</span> <br/>
+    <strong>Created By : </strong><span
+      class="text-primary">{{ project.user.first_name }} {{ project.user.last_name }}</span><br/>
+    <strong>Category : </strong><span class="text-primary">{{ project.category.name }}</span> <br/>
+    <form class="form-group" action="{% url 'projects:reportProject' project.id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger btn-md pull-right" value="Report Project"/><br/>
+    </form>
+    <hr>
+    <p class="font-weight-bold text-dark"> {{ project.details }}</p>
+    {% ratings project %}
+    {% if request.user == project.user %}
+      <br>
+      <a style="margin-top: 1rem;margin-bottom: 1rem;" class="btn btn-danger"
+         href="{% url 'projects:warn' project.id %}">Delete project</a>
+    {% endif %}
+    <!--start of target-->
+    <div class="donaitors">
+      <table class="table">
+        <thead class="thead-dark">
+        <tr>
+          <th scope="col">Total Target</th>
+          <th scope="col">Reached Target</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td> {{ project.target }} </td>
+          <td> {{ percent }}%</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--end of target-->
+
+
+    {% if request.user.is_authenticated and request.user.id != project.user.id %}
+      <!--start add donation-->
+      <div class="form-group col-xs-6">
+        <form class="form-group" action="{% url 'projects:donate' project.id %}" method="post">
+          {% csrf_token %}
+          <input class="form-control input-md" placeholder="Donation amount" type="text" name="donation"/>
+          <input class="btn btn-primary" type="submit" value="Donate" name="submit"/>
+        </form>
+      </div>
+      <!--end add donation-->
+    {% endif %}
+
+    <!--start donaitors table-->
+    {% if donations %}
       <div class="donaitors">
         <table class="table">
           <thead class="thead-dark">
           <tr>
-            <th scope="col">Total Target</th>
-            <th scope="col">Reached Target</th>
+            <th scope="col">Donation</th>
+            <th scope="col">Username</th>
+            <th scope="col">amount</th>
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td> {{ project.target }} </td>
-            <td> {{ percent }}%</td>
-          </tr>
+          {% for donation in donations %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td> {{ donation.user.first_name }} </td>
+              <td> {{ donation.amount }}</td>
+            </tr>
+          {% endfor %}
           </tbody>
         </table>
       </div>
-      <!--end of target-->
+    {% else %}
+      <div class="alert alert-info" role="alert">
+        No donation for this project
+      </div>
+    {% endif %}
+    <!--send donaitors table-->
 
 
-      {% if request.user.is_authenticated and request.user.id != project.user.id %}
-        <!--start add donation-->
-        <div class="form-group col-xs-6">
-          <form class="form-group" action="{% url 'projects:donate' project.id %}" method="post">
-            {% csrf_token %}
-            <input class="form-control input-md" placeholder="Donation amount" type="text" name="donation"/>
-            <input class="btn btn-primary" type="submit" value="Donate" name="submit"/>
-          </form>
-        </div>
-        <!--end add donation-->
-      {% endif %}
 
-      <!--start donaitors table-->
-      {% if donations %}
-        <div class="donaitors">
-          <table class="table">
-            <thead class="thead-dark">
-            <tr>
-              <th scope="col">Donation</th>
-              <th scope="col">Username</th>
-              <th scope="col">amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for donation in donations %}
-              <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td> {{ donation.user.first_name }} </td>
-                <td> {{ donation.amount }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div class="alert alert-info" role="alert">
-          No donation for this project
-        </div>
-      {% endif %}
-      <!--send donaitors table-->
+    <h5 class="font-weight-bold text-dark"> comments : </h5></br>
+    <div class=" rounded bg-light">
+      {% for comment in project.comment_set.all %}
+        {% if report_comment_ids and comment.id in report_comment_ids %}
 
-
-      <h5 class="font-weight-bold text-dark"> comments : </h5></br>
-      <div class="jumbotron rounded bg-light">
-        {% for comment in project.comment_set.all %}
-          <span
-              class="font-weight-bold text-primary"> {{ comment.user.first_name }} {{ comment.user.last_name }} :</span>
-          <span>{{ comment.body }}</span>
-
-          {% if comment.user.id == request.user.id %}
-            <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </a>
-            <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
-              <i class="fa fa-edit" aria-hidden="true"></i>
-            </a>
-          {% endif %}
-          <br/>
-          <!-- <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}" >Delete</a> -->
-          <!-- <a href="{% url 'projects:editComment' comment.project.id comment.id %}" >Edit</a></br>    -->
-          {% for reply in comment.reply_set.all %}
-            <p style="margin-left:5%">
-            <span class="font-weight-bold text-primary">
-                {{ reply.user.first_name }} {{ reply.user.last_name }} :
-            </span>
-              <span>{{ reply.body }}</span>
-              {% if reply.user.id == request.user.id %}
-                <a href="{% url 'projects:deleteReply'  reply.comment.project.id reply.comment.id reply.id %}">
-                  <i class="fa fa-trash" aria-hidden="true"></i>
+        {% else %}
+          <div class="p-3 mb-2 bg-dark text-white rounded">
+              <span
+                  class="font-weight-bold text-primary"> {{ comment.user.first_name }} {{ comment.user.last_name }} :</span>
+            <span>{{ comment.body }}</span>
+            <div class="float-right">
+              {% if comment.user.id == request.user.id %}
+                <a href="{% url 'projects:deleteComment' comment.project.id comment.id %}">
+                  <i class="fa fa-trash fa-lg " aria-hidden="true"></i>
                 </a>
-                <a href="{% url 'projects:editReply'  reply.comment.project.id reply.comment.id reply.id %}">
-                  <i class="fa fa-edit" aria-hidden="true"></i>
+                <a href="{% url 'projects:editComment' comment.project.id comment.id %}">
+                  <i class="fa fa-edit fa-lg " aria-hidden="true"></i>
                 </a>
+              {% else %}
+                <a href="{% url 'projects:reportComment' comment.project.id comment.id %}">
+                  <i class="fa fa-ban text-danger fa-lg "></i>
+                </a>
+              {% endif %}
+            </div>
 
+
+            <br/>
+
+            {% for reply in comment.reply_set.all %}
+              {% if report_reply_ids and reply.id in report_reply_ids %}
+
+              {% else %}
+                <p style="margin-left:5%">
+              <span class="font-weight-bold text-primary">
+                  {{ reply.user.first_name }} {{ reply.user.last_name }} :
+              </span>
+                  <span>{{ reply.body }}</span>
+                  <!-- <div class="float-right"> -->
+                  {% if reply.user.id == request.user.id %}
+                    <a href="{% url 'projects:deleteReply'  reply.comment.project.id reply.comment.id reply.id %}">
+                      <i class="fa fa-trash fa-lg " aria-hidden="true"></i>
+                    </a>
+                    <a href="{% url 'projects:editReply'  reply.comment.project.id reply.comment.id reply.id %}">
+                      <i class="fa fa-edit fa-lg " aria-hidden="true"></i>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'projects:reportReply' reply.comment.project.id reply.comment.id reply.id %}">
+                      <i class="fa fa-ban text-danger fa-lg "></i>
+                    </a>
+                  {% endif %}
+                  <!-- </div> -->
+                </p>
               {% endif %}
 
-            </p>
-          {% endfor %}
-          {% if request.user.is_authenticated %}
-            <a style="margin-left:5%;margin-bottom:2% " class="btn btn-primary" role="button"
-               href="{% url 'projects:newReply' comment.project.id comment.id %}">Add Reply</a><br/>
-          {% endif %}
-        {% endfor %}
-        {% if request.user.is_authenticated %}
-          <div class="form-group col-xs-6">
-            <form class="form-group" action="{% url 'projects:addComment' project.id %}" method="post">
-              {% csrf_token %}
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+              <a style="margin-left:5%;margin-bottom:2% " class="btn btn-primary" role="button"
+                 href="{% url 'projects:newReply' comment.project.id comment.id %}">Add Reply</a><br/>
+            {% endif %}
 
-              <input class="form-control input-md" placeholder="Add Comment ..." type="text" name="body"/>
-              <input class="btn btn-primary" type="submit" value="Add" name="submit"/>
-            </form>
           </div>
-        {% endif %}
-      </div>
 
+        {% endif %}
+      {% endfor %}
+
+
+      {% if request.user.is_authenticated %}
+        <div class="form-group col-xs-6">
+          <form class="form-group" action="{% url 'projects:addComment' project.id %}" method="post">
+            {% csrf_token %}
+
+            <input class="form-control input-md" placeholder="Add Comment ..." type="text" name="body"/>
+            <input class="btn btn-primary" type="submit" value="Add" name="submit"/>
+          </form>
+        </div>
+      {% endif %}
     </div>
+
+
+  {% endif %}
+</div>
 
 {% endblock content %}

@@ -1,8 +1,85 @@
 {% extends "base/base.html" %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'projects/style.css' %}">
+{% endblock style %}
 
 {% block content %}
+<!--start of latest five-->
+<section id="latest_five_projects" class="py-4">
     <div class="container">
-        <h1>projects listing page</h1>
-        <p>list all projects here</p>
+        <div class="row">
+            {% if projects %}
+            {% for project in projects %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    {% for picture in project.picture_set.all|slice:":1" %}
+                    <img class="card-img-top" src="{{ picture.image.url }}" alt="image not available">
+                    {% endfor %}
+                    <div>
+                        <h2>
+                            <span class="badge badge-secondary text-white">${{project.target}}</span>
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="text-primary">{{project.title}}</h5>
+                            <h6 class="text-primary">Owner: {{project.user.first_name}}</h6>
+                            <p>Category: {{project.category}}</p>
+                        </div>
+                        <hr>
+                        <div class="row py-1 text-secondary">
+                            <div class="col-6">
+                                <div>Start</div>
+                                <div>{{project.start_time}}</div>
+                            </div>
+                            <div class="col-6">
+                                <div>End</div>
+                                <div>{{project.end_time}}</div>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{% url 'projects:project_details' project.id %}" class="btn btn-primary btn-block">More
+                            Info</a>
+                    </div>
+                </div>
+            </div>
+           
+            {% endfor %}
+           
+            {% else %}
+            {% if 'search' not in request.path %}
+            <h1>No Projects Available</h1>
+            {% endif %}
+            {% endif %}
+        </div>
     </div>
+</section>
+<!--end of latest five-->
+
+<!--start of pagination-->
+<section>
+    <div class="pagination" style="width:300px; margin:0 auto;">
+        <div >
+            <span class="step-links">
+                {% if projects.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ projects.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ projects.number }} of {{ projects.paginator.num_pages }}.
+                </span>
+
+                {% if projects.has_next %}
+                <a href="?page={{ projects.next_page_number }}">next</a>
+                <a href="?page={{ projects.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</section>
+<!--end of pagination-->
+
 {% endblock content %}
