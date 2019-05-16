@@ -24,6 +24,7 @@
                         </div>
                         {% if field.html_name == 'category' %}
                             <select class="btn btn-lg" id='selectedTask' name="category">
+{#                                <option value="none">choies one</option>#}
                                 {% for value in category %}
                                     <option value="{{ value.id }}">{{ value }}</option>
                                 {% endfor %}

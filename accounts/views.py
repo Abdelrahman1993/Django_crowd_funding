@@ -23,11 +23,10 @@ class Signup(View):
 
   def post(self, request):
     form = SignupForm(request.POST)
-
-    # print(form.cleaned_data['email'])
     if form.is_valid():
       # Create an inactive user with no password:
       user = form.save(commit=False)
+      user.image = request.FILES['image']
       user.is_active = False
       # user.set_unusable_password()
       user.save()
@@ -93,6 +92,18 @@ def user_login(request):
     return render(request, 'accounts/login.html', {})
 
 
+def my_profile(request, pk):
+  user = User.objects.filter(id=pk)[0]
+  my_projects = Project.objects.filter(user=request.user)
+  my_donations = Donation.objects.filter(user=request.user)
+  context = {
+    'user': user,
+    'projects': my_projects,
+    'donations': my_donations,
+  }
+
+  return render(request, 'accounts/profile.html', context)
+
 
 # edit user profile
 class Edit_profile(UpdateView):
@@ -105,3 +116,14 @@ class Edit_profile(UpdateView):
   def get_object(self, queryset=None):
     obj = User.objects.get(id=self.kwargs['pk'])
     return obj
+
+
+def warn(request):
+  return render(request, 'accounts/warn.html', {})
+
+
+def delete_account(request, pk):
+  user = User.objects.get(id=pk);
+  logout(request)
+  user.delete()
+  return redirect('pages:index')

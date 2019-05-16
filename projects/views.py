@@ -3,28 +3,51 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from .formCreat import CreateProject
-from .models import Comment, Project, Reply, Picture, Category
+from .models import Comment, Project, Reply, Picture, Category, Donation, Tage
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.core.paginator import Paginator
 
 
 # Create your views here.
 
 def index(request):
-    return render(request, 'projects/index.html')
+    projects_list = Project.objects.all()
+    paginator = Paginator(projects_list, 9)
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    context = {
+        'projects': projects
+    }
+    return render(request, 'projects/index.html', context)
 
 
 def project_details(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     picture = Picture.objects.all().filter(project_id=project_id)
-    print("===================")
     current_user = request.user
-    print(current_user.id)
-    return render(request, 'projects/project_details.html', {'project': project, 'picture': picture[1]})
+
+    donations = Donation.objects.all().filter(project_id=project_id)
+    reached_target = Donation.objects.filter(project_id=project_id).aggregate(total=Sum('amount'))
+    print(reached_target)
+    if reached_target['total']:
+        percent = round(reached_target['total'] * 100 / project.target, 2)
+    else:
+        percent = 0
+
+    return render(request, 'projects/project_details.html', {
+        'project': project,
+        'picture': picture[0],
+        'donations': donations,
+        'percent': percent
+    })
 
 
 def new_comment(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     comment = Comment(
-        user_id=request.user.id, body=request.POST['body'],
+        user_id=request.user.id,
+        body=request.POST['body'],
         project_id=project_id)
     comment.save()
     return redirect('projects:project_details', project_id=project_id)
@@ -88,33 +111,34 @@ def update_reply(request, comment_id, project_id, reply_id):
     return redirect('projects:project_details', project_id=project_id)
 
 
+@login_required()
 def create(request):
     category = Category.objects.all()
     if request.method == 'POST':
         form = CreateProject(request.POST)
-        print(form.is_valid())
         if form:
-            # project.user = request.user
-            # project.user_id = 1
             project = Project()
+            project.user_id = request.user.id
             project.title = form['title'].value()
             project.target = int(form['target'].value())
             project.details = form['details'].value()
             project.end_time = form['endTiem'].value()
             project.category_id = int(request.POST['category'])
             # project.tages = form['tages'].value()
-
             project.save()
             if project.id:
+                allTags = form['tages'].value().split(',')
+                for onetag in allTags:
+                    tag = Tage()
+                    tag.name = onetag
+                    tag.project_id = project.id
+                    tag.save()
                 if request.FILES['Images']:
-
                     for i in request.FILES.getlist('Images'):
                         picture = Picture()
                         picture.project_id = project.id
                         picture.image = i
                         picture.save()
-                    # form.photo = request.FILES['photo']
-                    print(picture.id)
                     form = CreateProject()
                     if picture.id:
                         contextpost = {
@@ -145,3 +169,16 @@ def create(request):
             'category': category,
         }
         return render(request, 'projects/create.html', contextget)
+
+
+def donate(request, project_id):
+    if request.POST.get('donation'):
+        project = get_object_or_404(Project, pk=project_id)
+        donation = Donation(
+            user_id=request.user.id,
+            amount=request.POST['donation'],
+            project_id=project_id)
+        donation.save()
+        return redirect('projects:project_details', project_id=project_id)
+    else:
+        return redirect('projects:project_details', project_id=project_id)

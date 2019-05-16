@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <div style="text-align: center;" class="container">
+    <h1 style="color: red;">are you sure?</h1>
+    <div style="text-align: center;" class="alert alert-danger" role="alert">
+      Are you sure you want to delete your account ? All your projects and donations will be deleted:
+    </div>
+
+    <a style="margin: 2rem;" class="btn btn-danger"
+       href="{% url 'accounts:delete_account' request.user.id %}">Yes, I'm Sure</a>
+    <a style="margin: 2rem;" class="btn btn-secondary"
+       href="{% url 'accounts:my_profile' request.user.id %}">No, Take me back
+    </a>
+  </div>
+{% endblock %}

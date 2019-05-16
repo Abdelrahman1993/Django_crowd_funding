@@ -4,19 +4,10 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from accounts.models import User
 from taggit.managers import TaggableManager
 
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
-
-
-class Tage(models.Model):
-    name = models.CharField(max_length=200)
-
-    class Meta:
-        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -30,14 +21,26 @@ class Project(models.Model):
     end_time = models.DateTimeField()
     featured = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    tages = TaggableManager()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # tages = TaggableManager()
 
     class Meta:
         ordering = ('title',)
 
     def __str__(self):
         return self.title
+
+
+class Tage(models.Model):
+    name = models.CharField(max_length=200)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    # class Meta:
+    #     ordering = ('tages',)
+    #
+    # def __str__(self):
+    #     return self.tages
 
 
 # def get_image_filename(instance, filename):
