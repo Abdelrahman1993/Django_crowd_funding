@@ -1,7 +1,9 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Category, Tage, Project, Picture, Comment, Reply, Donation, Rate, InAppropriateProject, InAppropriateComment, InAppropriateReply 
+from .models import Category, Tage, Project, Picture, Comment, Reply, Donation, Rate, InAppropriateProject, \
+    InAppropriateComment, InAppropriateReply
+
 admin.site.register(Category)
 admin.site.register(Tage)
 admin.site.register(Project)
