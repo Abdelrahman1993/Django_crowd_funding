@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <div class="card" style="width: 22rem;float: left; margin-top: 5rem; margin-right: 10rem;">
+    <div class="card ml-5 mr-5" style="width: 22rem;float: left; margin-top: 5rem;">
         <img class="card-img-top" src="{% if user.image %}
                  {{ user.image.url }}
                {% else %}
@@ -30,50 +30,60 @@
             <a style="margin-top: 1rem;" class="btn btn-danger" href="{% url 'accounts:warn' %}">Delete my account</a>
         {% endif %}
     </div>
-    <div style="width: 50rem; float: left;margin-top: 2rem;">
-        <h2 style="text-align: center;">my Projects</h2>
-        <table class="table table-dark table-striped">
-            <thead>
-            <tr>
-                <th>title</th>
-                <th>Category</th>
-                <th>Tages</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for p in projects %}
+    <div class="row">
+
+        <div class="col-10" style="width: 50rem; float: left;margin-top: 2rem;">
+            <h2 style="text-align: center;">my Projects</h2>
+            <table class="table table-dark table-striped">
+                <thead>
                 <tr>
-                    <td>{{ p.title }}</td>
-                    <td>{{ p.category }}</td>
-                    <td>
-                        {% for t in p.tags %}
-                            <span style="">{{ t.name }} , </span>
-                        {% endfor %}
-                    </td>
+                    <th>title</th>
+                    <th>Donation</th>
+                    <th>Category</th>
+                    <th>Tages</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for p in projects %}
+                    <tr>
+                        <td>{{ p.title }}</td>
+                        <td>{{ p.category }}</td>
+                        <td>
+                            {% for t in p.tags %}
+                                {{ t.name }} ,
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for t in p.donation %}
+                                <span style="">{{ t.amount }} </span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+{#        <div style="width: 50rem; float: right;margin-top: 2rem;margin-right: 10rem;">#}
+{#            <h2 style="text-align: center;">my Donations</h2>#}
+{#            <table class="table table-dark table-striped">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Project</th>#}
+{#                    <th>Amount</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                {% for d in donations %}#}
+{#                    <tr>#}
+{#                        <td>{{ d.project.title }}</td>#}
+{#                        <td>{{ d.amount }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
     </div>
-    <div style="width: 50rem; float: right;margin-top: 2rem;margin-right: 10rem;">
-        <h2 style="text-align: center;">my Donations</h2>
-        <table class="table table-dark table-striped">
-            <thead>
-            <tr>
-                <th>Project</th>
-                <th>Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for d in donations %}
-                <tr>
-                    <td>{{ d.project.title }}</td>
-                    <td>{{ d.amount }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
     <div style="clear: both;"></div>
 {% endblock %}
 

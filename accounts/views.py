@@ -98,7 +98,9 @@ def my_profile(request, pk):
     my_donations = Donation.objects.filter(user=request.user)
     for i in my_projects:
         i.tags = Tage.objects.filter(project=i.id)
-
+        i.donation = Donation.objects.filter(user=request.user,project=i.id)
+        for d in i.donation:
+            print(d.amount)
     context = {
         'user': user,
         'projects': my_projects,
