@@ -75,18 +75,19 @@ class Rate(models.Model):
 
 
 class InAppropriateProject(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # is_appropriate = models.BooleanField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+   
 
 
 class InAppropriateComment(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # is_appropriate = models.BooleanField()
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
+   
 
 
 class InAppropriateReply(models.Model):
-    reply = models.ForeignKey(Reply, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # is_appropriate = models.BooleanField()
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE, null=True)
+   
+ 
