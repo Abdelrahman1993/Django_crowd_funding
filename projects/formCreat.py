@@ -12,7 +12,8 @@ class CreateProject(forms.Form):
     category = forms.ChoiceField(label="category", required=True,
                                  widget=forms.TextInput(attrs={'class': 'col-12 btn-lg'}))
     endTiem = forms.DateTimeField(label="end time", required=True,
-                                  widget=forms.DateTimeInput(attrs={'type': 'date', 'class': 'col-12 btn-lg'}))
+                                  widget=forms.DateTimeInput(attrs={'type': 'date', 
+                                  'class': 'col-12 btn-lg'}))
     tages = TagField(label="Tags", required="true",
                      widget=forms.TextInput(attrs={'class': 'col-12 btn-lg'}))
     Images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
