@@ -33,6 +33,7 @@ def index(request):
 def project_details(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     picture = Picture.objects.all().filter(project_id=project_id)
+    # return HttpResponse(picture)
 
     report_projects = InAppropriateProject.objects.filter(
         user_id=request.user.id, project_id=project_id)
@@ -67,7 +68,8 @@ def project_details(request, project_id):
         'percent': percent,
         'report_projects': report_projects,
         'report_comment_ids': report_comment_ids,
-        'report_reply_ids': report_reply_ids
+        'report_reply_ids': report_reply_ids,
+        "pictures": picture
     })
 
 

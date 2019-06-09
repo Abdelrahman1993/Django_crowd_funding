@@ -21,9 +21,12 @@ def index(request):
 
 def search(request):
     if request.GET.get("search"):
+
         search_keyword = request.GET.get("search")
-        search_set = Project.objects.filter(Q(title__icontains = search_keyword) | Q(tages__name__icontains = search_keyword)).distinct()
-        #search_set = Project.objects.filter(tages__name__startswith = search_keyword)
+        # search_set3 = Project.objects.filter(title__icontains = search_keyword).distinct()
+        # search_set2 = Project.objects.filter(tage__name__icontains = search_keyword).distinct()
+        search_set = Project.objects.filter(Q(title__icontains = search_keyword) | Q(tage__name__icontains = search_keyword)).distinct()
+        # return HttpResponse(search_set)
         context = {
             "projects_search": search_set
         }

@@ -167,8 +167,13 @@
         </div>
       {% endif %}
     </div>
-
-
+  {% endif %}
+  {% if pictures %}
+    {% for picture in pictures %}
+      <a href="{{ picture.image.url }}">
+        <img src="{{ picture.image.url }}" class="rounded mx-auto my-4" width="150" height="150"/>
+      </a>
+    {% endfor %}
   {% endif %}
 </div>
 
