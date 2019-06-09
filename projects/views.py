@@ -3,11 +3,13 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from .formCreat import CreateProject
-from .models import Comment, Project, Reply, Picture, Category, Donation, InAppropriateProject, InAppropriateComment, InAppropriateReply
+from .models import Comment, Project, Reply, Tage, Picture, Category, Donation, InAppropriateProject, \
+    InAppropriateComment, InAppropriateReply
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.core.paginator import Paginator
+
 
 # Create your views here.
 
@@ -54,7 +56,7 @@ def project_details(request, project_id):
         project_id=project_id).aggregate(total=Sum('amount'))
     print(reached_target)
     if reached_target['total']:
-        percent = round(reached_target['total']*100/project.target, 2)
+        percent = round(reached_target['total'] * 100 / project.target, 2)
     else:
         percent = 0
 
@@ -89,7 +91,8 @@ def edit_comment(request, comment_id, project_id):
     project = Project.objects.get(pk=project_id)
     comment = Comment.objects.get(pk=comment_id)
     picture = Picture.objects.all().filter(project_id=project_id)
-    return render(request, 'projects/edit_comment.html', {'project': project, 'comment_id': comment_id, 'picture': picture[0]})
+    return render(request, 'projects/edit_comment.html',
+                  {'project': project, 'comment_id': comment_id, 'picture': picture[0]})
 
 
 def update_comment(request, comment_id, project_id):
@@ -148,8 +151,8 @@ def edit_reply(request, comment_id, project_id, reply_id):
         report_reply_ids.append(r['reply_id'])
 
     return render(request, 'projects/edit_reply.html',
-                 {'project': project,
-                  'comment_id': comment_id,
+                  {'project': project,
+                   'comment_id': comment_id,
                    'reply_id': reply_id,
                    'picture': picture[0],
                    'report_reply_ids': report_reply_ids
@@ -163,30 +166,41 @@ def update_reply(request, comment_id, project_id, reply_id):
     return redirect('projects:project_details', project_id=project_id)
 
 
+def update_reply(request, comment_id, project_id, reply_id):
+    body = request.POST['body']
+    Reply.objects.filter(pk=reply_id).update(body=body)
+    project = get_object_or_404(Project, pk=project_id)
+    return redirect('projects:project_details', project_id=project_id)
+
+
+@login_required()
 def create(request):
     category = Category.objects.all()
     if request.method == 'POST':
         form = CreateProject(request.POST)
-        print("===================================")
-        print(request.POST)
-        print("===================================")
-        print(request.POST['Images'])
-        print("===================================")
         if form:
             project = Project()
+            project.user_id = request.user.id
             project.title = form['title'].value()
             project.target = int(form['target'].value())
             project.details = form['details'].value()
             project.end_time = form['endTiem'].value()
             project.category_id = int(request.POST['category'])
-            project.tages = form['tages'].value()
+            # project.tages = form['tages'].value()
             project.save()
             if project.id:
-                if request.POST['Images']:
-                    picture = Picture()
-                    picture.project_id = project.id
-                    picture.image = request.POST['Images']
-                    picture.save()
+                allTags = form['tages'].value().split(',')
+                for onetag in allTags:
+                    tag = Tage()
+                    tag.name = onetag
+                    tag.project_id = project.id
+                    tag.save()
+                if request.FILES['Images']:
+                    for i in request.FILES.getlist('Images'):
+                        picture = Picture()
+                        picture.project_id = project.id
+                        picture.image = i
+                        picture.save()
                     form = CreateProject()
                     if picture.id:
                         contextpost = {
@@ -194,15 +208,22 @@ def create(request):
                             'category': category,
                             'done': "broject has been created and picture saved"
                         }
+                        return render(request, 'projects/create.html', contextpost)
                     else:
                         contextpost = {
                             'form': form,
                             'category': category,
                             'done': "broject has been created and picture dose not saved"
                         }
-                    return render(request, 'projects/create.html', contextpost)
-                return HttpResponse('nooooooooooooooooo')
-        return HttpResponse(form.fields)
+            return render(request, 'projects/create.html', contextpost)
+        else:
+            contextpost = {
+                'form': form,
+                'category': category,
+                'done': "noooooooooooooooooooooooo"
+            }
+            return render(request, 'projects/create.html', contextpost)
+        # return HttpResponse(form.fields)
     else:
         form = CreateProject()
         contextget = {
@@ -229,7 +250,7 @@ def report_project(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     in_appropriate_project = InAppropriateProject(
         user_id=request.user.id,
-project_id=project_id)
+        project_id=project_id)
     in_appropriate_project.save()
     return redirect('projects:index')
 
@@ -253,17 +274,17 @@ def report_reply(request, project_id, comment_id, reply_id):
 
 
 def warn(request, pk):
-  context = {
-    'cancel': 'projects:project_details',
-    'delete': 'projects:project_delete',
-    'msg': 'Are you sure you want to delete this project ? All it\'s donations, comments will be deleted',
-    'cancel_id': pk,
-    'delete_id': pk,
-  }
-  return render(request, 'accounts/warn.html', context)
+    context = {
+        'cancel': 'projects:project_details',
+        'delete': 'projects:project_delete',
+        'msg': 'Are you sure you want to delete this project ? All it\'s donations, comments will be deleted',
+        'cancel_id': pk,
+        'delete_id': pk,
+    }
+    return render(request, 'accounts/warn.html', context)
 
 
 def delete_project(request, pk):
-  project = Project.objects.get(id=pk);
-  project.delete()
-  return redirect('pages:index')
+    project = Project.objects.get(id=pk);
+    project.delete()
+    return redirect('pages:index')

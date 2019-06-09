@@ -7,12 +7,12 @@
             {{ done }}
         {% endif %}
         <div>
-            <form class="row" class="create" method="POST">
+            <form enctype="multipart/form-data" class="row" class="create" method="POST">
                 {% csrf_token %}
-                {% for error in error %}
-                    <p class="danger">
+                {% for error in form.errors %}
+                    <h1 class="danger">
                         {{ error }}
-                    </p>
+                    </h1>
                 {% empty %}
                 {% endfor %}
                 {% for field in form %}
@@ -24,6 +24,7 @@
                         </div>
                         {% if field.html_name == 'category' %}
                             <select class="btn btn-lg" id='selectedTask' name="category">
+{#                                <option value="none">choies one</option>#}
                                 {% for value in category %}
                                     <option value="{{ value.id }}">{{ value }}</option>
                                 {% endfor %}
@@ -46,21 +47,6 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-
-{#            {% for field in formimage %}#}
-{#                    <div class="col-12 row mt-3">#}
-{#                        <div class="col-3">#}
-{#                            <label for="{{ field.id_for_label }}">#}
-{#                                {{ field.html_name }}#}
-{#                            </label>#}
-{#                        </div>#}
-{#                            <div class="col-9 row">#}
-{#                                {{ field }}#}
-{#                            </div>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-
-
                 <div class="mb-3">
                     <button type="submit" class="btn btn-lg btn-primary">Create</button>
                 </div>
